@@ -1,0 +1,13 @@
+
+---
+
+### `.gitignore`
+
+```gitignore
+*.deb
+*.bak
+*.tar
+*.tar.gz
+*.orig
+*.swp
+/tmp/*

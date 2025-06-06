@@ -1,0 +1,25 @@
+--- /usr/share/perl5/PVE/API2/Qemu.pm    original
++++ /usr/share/perl5/PVE/API2/Qemu.pm    modified
+@@ -10,6 +10,8 @@
+ use PVE::API2::Qemu::Agent;
+ use PVE::API2::Qemu::Monitor;
++use PVE::API2::Qemu::ExportOva;
+ 
+ # inside the __PACKAGE__ register_method block:
++__PACKAGE__->register_method({
++    name => 'export_ova',
++    path => 'export-ova',
++    proxyto => 'node',
++    method => 'POST',
++    permissions => { check => ['perm', '/nodes/{node}/qemu/{vmid}', ['VM.Audit']], },
++    description => "Export VM to OVA",
++    parameters => {
++        additionalProperties => 0,
++        properties => {},
++    },
++    returns => { type => 'string' },
++    code => sub {
++        my ($param) = @_;
++        return PVE::API2::Qemu::ExportOva::export_ova($param);
++    },
++});

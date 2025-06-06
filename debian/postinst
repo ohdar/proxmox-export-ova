@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+echo "[INFO] Post-install script running..."
+
+# Copy API file
+install -D -m 644 /opt/pve-export-ova/api/PVE_API2_Qemu_ExportOva.pm \
+    /usr/share/perl5/PVE/API2/Qemu/ExportOva.pm
+
+# Patch Qemu.pm
+patch -N /usr/share/perl5/PVE/API2/Qemu.pm < /opt/pve-export-ova/api/Qemu.pm.patch || echo "[INFO] Patch already applied."
+
+# Make script executable and move it
+install -D -m 755 /opt/pve-export-ova/bin/export_to_ova_plus.sh \
+    /usr/local/bin/export_to_ova_plus.sh
+
+# Patch UI
+bash /opt/pve-export-ova/ui/ui_patch.sh
+
+# Restart UI
+systemctl restart pveproxy
+
+echo "[INFO] Export to OVA feature installed successfully!"
